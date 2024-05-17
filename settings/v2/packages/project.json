@@ -4,5 +4,6 @@
     "designResolution": {
       "fitHeight": false
     }
-  }
+  },
+  "custom_joint_texture_layouts": []
 }
