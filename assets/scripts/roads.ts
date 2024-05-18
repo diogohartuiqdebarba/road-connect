@@ -1,9 +1,11 @@
 import { Node, Vec3, tween, Button, Sprite, SpriteFrame, Label } from 'cc'
 import levels from './levelsData'
+import { AudioController } from './audioController'
 
 let canRotate = true
 const ROAD_SCALE = 0.75
 const ROAD_ANIMATION_DELAY = 0.25
+const NEXT_LEVEL_DELAY = 0.1
 
 function getRandomNumber(min: number, max: number) {
     return Math.random() * (max - min) + min
@@ -37,7 +39,10 @@ function checkTargetAngles(menu: Node, level: number, roadsParent: Node) {
     if (levelComplete) {
         const nextLevel = level + 1
         canRotate = false
-        menu.emit('NextLevel', nextLevel)
+        tween(roadsParent)
+        .delay(NEXT_LEVEL_DELAY)
+        .call(() => menu.emit('NextLevel', nextLevel))
+        .start()
     }
     return levelComplete
 }
@@ -53,7 +58,13 @@ function roadRotate(menu: Node, node: Node, level: number, roadsParent: Node) {
     }
 }
 
-function createRoadNodes(menu: Node, roadsParent: Node, level: number, roadSprites: SpriteFrame[]) {
+function createRoadNodes(
+    audioController: AudioController, 
+    menu: Node, 
+    roadsParent: Node, 
+    level: number, 
+    roadSprites: SpriteFrame[]
+) {
     const scale = ROAD_SCALE
     const levelRoads = levels[level].roads
     const gridPosX = 48
@@ -77,7 +88,10 @@ function createRoadNodes(menu: Node, roadsParent: Node, level: number, roadSprit
         node.angle = -road.angle
         roadAnimation(node, scale)
         node.setParent(roadsParent)
-        node.on("click", () => roadRotate(menu, node, level, roadsParent))
+        node.on("click", () => {
+            audioController.playOneShot('rotateShape')
+            roadRotate(menu, node, level, roadsParent)
+        })
     })
 }
 
@@ -100,6 +114,14 @@ function animateTitleLevel(levelTitle: Node, level: number) {
     .start()
 }
 
+
+function playShapeAppearSFX(roadsParent: Node, audioController: AudioController) {
+    tween(roadsParent)
+    .delay(0.2)
+    .call(() => audioController.playOneShot('shapeAppear'))
+    .start()
+}
+
 export function hideRoadsAnimation(roadsParent: Node) {
     canRotate = false
     roadsParent.children.forEach((road: Node) => {
@@ -107,7 +129,44 @@ export function hideRoadsAnimation(roadsParent: Node) {
     })
 }
 
+function createRoadWithAnimation(
+    audioController: AudioController,
+    menu: Node, 
+    levelTitle: Node, 
+    roadsParent: Node, 
+    level: number, 
+    roadSprites: SpriteFrame[]
+) {
+    hideRoadsAnimation(roadsParent)
+    animateTitleLevel(levelTitle, level)
+    tween(roadsParent)
+    .delay(ROAD_ANIMATION_DELAY)
+    .call(() => {
+        roadsParent.removeAllChildren()
+        createRoadNodes(audioController, menu, roadsParent, level, roadSprites)
+        canRotate = true
+    })
+    .call(() => playShapeAppearSFX(roadsParent, audioController))
+    .start()
+}
+
+function createRoadWithoutAnimation(
+    audioController: AudioController,
+    menu: Node, 
+    levelTitle: Node, 
+    roadsParent: Node, 
+    level: number, 
+    roadSprites: SpriteFrame[]
+) {
+    setLevelTitle(levelTitle, level)
+    roadsParent.removeAllChildren()
+    createRoadNodes(audioController, menu, roadsParent, level, roadSprites)
+    playShapeAppearSFX(roadsParent, audioController)
+    canRotate = true
+}
+
 export function createRoads(
+    audioController: AudioController,
     menu: Node, 
     levelTitle: Node, 
     roadsParent: Node, 
@@ -115,23 +174,9 @@ export function createRoads(
     roadSprites: SpriteFrame[],
     isNext: boolean,
 ) {
-    if (level > 0) {
-        if (isNext) {
-            hideRoadsAnimation(roadsParent)
-            animateTitleLevel(levelTitle, level)
-        }
-        tween(roadsParent)
-        .delay(ROAD_ANIMATION_DELAY)
-        .call(() => {
-            roadsParent.removeAllChildren()
-            createRoadNodes(menu, roadsParent, level, roadSprites)
-            canRotate = true
-        })
-        .start()
+    if (level > 0 && isNext) {
+        createRoadWithAnimation(audioController, menu, levelTitle, roadsParent, level, roadSprites)
     } else {
-        setLevelTitle(levelTitle, level)
-        roadsParent.removeAllChildren()
-        createRoadNodes(menu, roadsParent, level, roadSprites)
-        canRotate = true
+        createRoadWithoutAnimation(audioController, menu, levelTitle, roadsParent, level, roadSprites)
     }
 }

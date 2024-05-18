@@ -1,5 +1,6 @@
-import { _decorator, Component, Node, Prefab, CCInteger, Label, SpriteFrame, Vec3, tween, instantiate } from 'cc'
+import { _decorator, Component, Node, Prefab, CCInteger, Label, SpriteFrame, Vec3, tween, instantiate, Tween } from 'cc'
 import { createRoads, hideRoadsAnimation } from './roads'
+import { AudioController } from './audioController'
 const { ccclass, property } = _decorator
 
 @ccclass('startGame')
@@ -28,6 +29,9 @@ export class startGame extends Component {
     @property([SpriteFrame])
     roadSprites: SpriteFrame[] = []
 
+    @property(AudioController)
+    audioController: AudioController = null
+
     createLevelButtons() {
         const initialPosX = -145
         const initialPosY = 180
@@ -45,12 +49,16 @@ export class startGame extends Component {
             const level = (i + 1).toString()
             prefabInstance.getComponentInChildren(Label).string = level
             prefabInstance.active = true
-            prefabInstance.on("click", () => this.playGame(i))
+            prefabInstance.on("click", () => {
+                this.audioController.playOneShot('defaultClick')
+                this.playGame(i)
+            })
         }
     }
 
     showLevelsMenu() {
         hideRoadsAnimation(this.gameRoads)
+        this.audioController.playOneShot('defaultClick')
         tween(this.node)
         .delay(0.5)
         .call(() => {
@@ -73,7 +81,7 @@ export class startGame extends Component {
         if (level < this.maxLevels) {
             this.gameNode.active = true
             this.levelsNode.active = false
-            createRoads(this.node, this.levelTitle, this.gameRoads, level, this.roadSprites, isNext)
+            createRoads(this.audioController, this.node, this.levelTitle, this.gameRoads, level, this.roadSprites, isNext)
         } else {
             this.showLevelsMenu()
         }
@@ -83,9 +91,13 @@ export class startGame extends Component {
         this.levelsNode.active = false
         this.gameNode.active = false
         this.createLevelButtons()
-        this.node.on("click", this.playButtonAnimation, this)
+        this.node.once("click", this.playButtonAnimation, this)
         this.menuButton.on("click", this.showLevelsMenu, this)
-        this.node.on("NextLevel", (level: number) => this.playGame(level, true))
+        this.node.on("NextLevel", (level: number) => {
+            Tween.stopAll()
+            this.audioController.playOneShot('levelComplete')
+            this.playGame(level, true)
+        })
     }    
 }
 
