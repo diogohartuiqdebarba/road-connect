@@ -1,7 +1,9 @@
-import { Node, Vec3, tween, Button, Sprite, SpriteFrame } from 'cc'
+import { Node, Vec3, tween, Button, Sprite, SpriteFrame, Label } from 'cc'
 import levels from './levelsData'
 
 let canRotate = true
+const ROAD_SCALE = 0.75
+const ROAD_ANIMATION_DELAY = 0.25
 
 function getRandomNumber(min: number, max: number) {
     return Math.random() * (max - min) + min
@@ -12,7 +14,7 @@ function roadAnimation(node: Node, scale: number, invert = false) {
     const finalScale = new Vec3(scale, scale, 1)
     tween(node)
     .set({ scale: invert ? finalScale : initialScale})
-    .delay(getRandomNumber(0.25, 0.75))
+    .delay(invert ? 0 : getRandomNumber(0.25, 0.75))
     .to(0.25, { scale: invert ? initialScale : finalScale }, { easing: "quadInOut"})
     .start()
 }
@@ -45,22 +47,21 @@ function roadRotate(menu: Node, node: Node, level: number, roadsParent: Node) {
         const angle = clampAngle(node.angle - 90)
         tween(node)
         .to(0.15, { angle }, { easing: "quadIn"})
-        .delay(0.15)
+        .delay(ROAD_ANIMATION_DELAY)
         .call(() => checkTargetAngles(menu, level, roadsParent))
         .start()
     }
 }
 
-export function createRoads(menu: Node, roadsParent: Node, level: number, roadSprites: SpriteFrame[]) {
+function createRoadNodes(menu: Node, roadsParent: Node, level: number, roadSprites: SpriteFrame[]) {
+    const scale = ROAD_SCALE
     const levelRoads = levels[level].roads
-    const scale = 0.75
     const gridPosX = 48
     const gridPosY = 0
     const max = 4
     const initialPosX = -256 * scale
     const initialPosY = 256 * scale
     const offset = 128 * scale
-    roadsParent.removeAllChildren()
     levelRoads.forEach((road, i) => {
         const index = road.pos
         const row = Math.floor(index / max)
@@ -78,5 +79,50 @@ export function createRoads(menu: Node, roadsParent: Node, level: number, roadSp
         node.setParent(roadsParent)
         node.on("click", () => roadRotate(menu, node, level, roadsParent))
     })
-    canRotate = true
+}
+
+function setLevelTitle(levelTitle: Node, level: number) {
+    const title = levelTitle.getComponent(Label)
+    title.string = `Level ${level + 1}`
+}
+
+function animateTitleLevel(levelTitle: Node, level: number) {
+    const pos = levelTitle.position
+    const center = new Vec3(0, pos.y, 0)
+    const oldFinal = new Vec3(-600, pos.y, 0)
+    const newInitial = new Vec3(600, pos.y, 0)
+    tween(levelTitle)
+    .to(0.5, { position: oldFinal }, { easing: "quadInOut" })
+    .delay(0.5)
+    .set({ position: newInitial })
+    .call(() => setLevelTitle(levelTitle, level))
+    .to(0.5, { position: center }, { easing: "expoOut" })
+    .start()
+}
+
+export function hideRoadsAnimation(roadsParent: Node) {
+    canRotate = false
+    roadsParent.children.forEach((road: Node) => {
+        roadAnimation(road, ROAD_SCALE, true)
+    })
+}
+
+export function createRoads(menu: Node, levelTitle: Node, roadsParent: Node, level: number, roadSprites: SpriteFrame[]) {
+    if (level > 0) {
+        hideRoadsAnimation(roadsParent)
+        animateTitleLevel(levelTitle, level)
+        tween(roadsParent)
+        .delay(ROAD_ANIMATION_DELAY)
+        .call(() => {
+            roadsParent.removeAllChildren()
+            createRoadNodes(menu, roadsParent, level, roadSprites)
+            canRotate = true
+        })
+        .start()
+    } else {
+        setLevelTitle(levelTitle, level)
+        roadsParent.removeAllChildren()
+        createRoadNodes(menu, roadsParent, level, roadSprites)
+        canRotate = true
+    }
 }

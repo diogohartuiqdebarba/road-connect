@@ -1,5 +1,5 @@
 import { _decorator, Component, Node, Prefab, CCInteger, Label, SpriteFrame, Vec3, tween, instantiate } from 'cc'
-import { createRoads } from './road'
+import { createRoads, hideRoadsAnimation } from './roads'
 const { ccclass, property } = _decorator
 
 @ccclass('startGame')
@@ -9,6 +9,9 @@ export class startGame extends Component {
 
     @property(Node)
     levelsNode: Node = null
+
+    @property(Node)
+    levelTitle: Node = null
 
     @property(Prefab)
     levelButtonPrefab: Prefab = null
@@ -62,14 +65,13 @@ export class startGame extends Component {
 
     playGame(level: number) {
         if (level < this.maxLevels) {
-            const title = this.gameNode.getComponentInChildren(Label)
-            title.string = `Level ${level + 1}`
             this.gameNode.active = true
             this.levelsNode.active = false
-            createRoads(this.node, this.gameRoads, level, this.roadSprites)
+            createRoads(this.node, this.levelTitle, this.gameRoads, level, this.roadSprites)
         } else {
+            hideRoadsAnimation(this.gameRoads)
             tween(this.node)
-            .delay(1)
+            .delay(0.5)
             .call(() => this.showLevelsMenu())
             .start()
         }

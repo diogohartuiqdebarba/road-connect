@@ -28,15 +28,15 @@ export class LabelAnimation extends Component {
         const pos = this.node.position
         pos.set(this.x, pos.y)
         if (this.type === LabelAnimationType.scale) {
-            this.node.scale.set(0, 0)
-            const scale = new Vec3(1, 1, 1)
+            const scale = new Vec3(this.scale, this.scale, 1)
             tween(this.node)
-            .to(0.5, { scale }, { easing: "quartOut"})
+            .set({ scale: new Vec3(0, 0, 1) })
+            .to(0.5, { scale }, { easing: "quadInOut" })
             .start()
         } else {
             const position = new Vec3(0, pos.y, 0)
             tween(this.node)
-            .to(0.5, { position }, { easing: "expoOut"})
+            .to(0.5, { position }, { easing: "expoOut" })
             .start()
         }
     }
