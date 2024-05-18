@@ -107,10 +107,19 @@ export function hideRoadsAnimation(roadsParent: Node) {
     })
 }
 
-export function createRoads(menu: Node, levelTitle: Node, roadsParent: Node, level: number, roadSprites: SpriteFrame[]) {
+export function createRoads(
+    menu: Node, 
+    levelTitle: Node, 
+    roadsParent: Node, 
+    level: number, 
+    roadSprites: SpriteFrame[],
+    isNext: boolean,
+) {
     if (level > 0) {
-        hideRoadsAnimation(roadsParent)
-        animateTitleLevel(levelTitle, level)
+        if (isNext) {
+            hideRoadsAnimation(roadsParent)
+            animateTitleLevel(levelTitle, level)
+        }
         tween(roadsParent)
         .delay(ROAD_ANIMATION_DELAY)
         .call(() => {

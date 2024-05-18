@@ -50,9 +50,15 @@ export class startGame extends Component {
     }
 
     showLevelsMenu() {
-        this.node.getParent().active = false
-        this.gameNode.active = false
-        this.levelsNode.active = true
+        hideRoadsAnimation(this.gameRoads)
+        tween(this.node)
+        .delay(0.5)
+        .call(() => {
+            this.node.getParent().active = false
+            this.gameNode.active = false
+            this.levelsNode.active = true
+        })
+        .start()
     }
 
     playButtonAnimation() {
@@ -63,17 +69,13 @@ export class startGame extends Component {
         .start()
     }
 
-    playGame(level: number) {
+    playGame(level: number, isNext = false) {
         if (level < this.maxLevels) {
             this.gameNode.active = true
             this.levelsNode.active = false
-            createRoads(this.node, this.levelTitle, this.gameRoads, level, this.roadSprites)
+            createRoads(this.node, this.levelTitle, this.gameRoads, level, this.roadSprites, isNext)
         } else {
-            hideRoadsAnimation(this.gameRoads)
-            tween(this.node)
-            .delay(0.5)
-            .call(() => this.showLevelsMenu())
-            .start()
+            this.showLevelsMenu()
         }
     }
 
@@ -83,7 +85,7 @@ export class startGame extends Component {
         this.createLevelButtons()
         this.node.on("click", this.playButtonAnimation, this)
         this.menuButton.on("click", this.showLevelsMenu, this)
-        this.node.on("NextLevel", (level: number) => this.playGame(level))
+        this.node.on("NextLevel", (level: number) => this.playGame(level, true))
     }    
 }
 

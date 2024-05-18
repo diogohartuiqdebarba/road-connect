@@ -8,4 +8,4 @@ I avoid extra spaces and comments in my code, I like to read the code dynamicall
 
 # Original project bugs
 
-The first bug founded was the level title, it starts in 0 instead 1.
+The first bug founded was the level title, it starts in 0 instead 1. Not congruent with the level buttons in the menu.
