@@ -1,6 +1,7 @@
 import { Node, Vec3, tween, Button, Sprite, SpriteFrame, Label } from 'cc'
 import levels from './levelsData'
 import { AudioController } from './audioController'
+import { t } from './translations'
 
 let canRotate = true
 const ROAD_SCALE = 0.75
@@ -97,7 +98,7 @@ function createRoadNodes(
 
 function setLevelTitle(levelTitle: Node, level: number) {
     const title = levelTitle.getComponent(Label)
-    title.string = `Level ${level + 1}`
+    title.string = `${t('level')} ${level + 1}`
 }
 
 function animateTitleLevel(levelTitle: Node, level: number) {
@@ -113,7 +114,6 @@ function animateTitleLevel(levelTitle: Node, level: number) {
     .to(0.5, { position: center }, { easing: "expoOut" })
     .start()
 }
-
 
 function playShapeAppearSFX(roadsParent: Node, audioController: AudioController) {
     tween(roadsParent)

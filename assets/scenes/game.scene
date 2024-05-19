@@ -340,7 +340,7 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 220.07997131347656,
+      "width": 179.93997192382812,
       "height": 151.2
     },
     "_anchorPoint": {
@@ -370,7 +370,7 @@
       "b": 255,
       "a": 255
     },
-    "_string": "label",
+    "_string": "ROAD",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
     "_actualFontSize": 60,
@@ -425,7 +425,6 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "text": "ROAD",
     "x": -600,
     "scale": 0,
     "type": 1,
@@ -494,7 +493,7 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 220.07997131347656,
+      "width": 315.53997802734375,
       "height": 151.2
     },
     "_anchorPoint": {
@@ -524,7 +523,7 @@
       "b": 255,
       "a": 255
     },
-    "_string": "label",
+    "_string": "CONNECT",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
     "_actualFontSize": 60,
@@ -579,7 +578,6 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "text": "CONNECT",
     "x": 600,
     "scale": 0,
     "type": 2,
@@ -755,6 +753,9 @@
     },
     "menuButton": {
       "__id__": 29
+    },
+    "levelsMenuLabel": {
+      "__id__": 24
     },
     "roadSprites": [
       {
@@ -1703,7 +1704,6 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "text": "Play",
     "x": 0,
     "scale": 1,
     "type": 3,

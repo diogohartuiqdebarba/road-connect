@@ -10,9 +10,6 @@ enum LabelAnimationType {
 Enum(LabelAnimationType)
 @ccclass('LabelAnimation')
 export class LabelAnimation extends Component {
-    @property(CCString)
-    text: string = ''
-
     @property(CCInteger)
     x: number = 0
 
@@ -23,8 +20,6 @@ export class LabelAnimation extends Component {
     type: LabelAnimationType = LabelAnimationType.leftToRight
 
     start() {
-        const label = this.node.getComponent(Label)
-        label.string = this.text
         const pos = this.node.position
         pos.set(this.x, pos.y)
         if (this.type === LabelAnimationType.scale) {

@@ -1,6 +1,7 @@
 import { _decorator, Component, Node, Prefab, CCInteger, Label, SpriteFrame, Vec3, tween, instantiate, Tween } from 'cc'
 import { createRoads, hideRoadsAnimation } from './roads'
 import { AudioController } from './audioController'
+import { t } from './translations'
 const { ccclass, property } = _decorator
 
 @ccclass('startGame')
@@ -25,6 +26,9 @@ export class startGame extends Component {
 
     @property(Node)
     menuButton: Node = null
+
+    @property(Label)
+    levelsMenuLabel: Label = null
 
     @property([SpriteFrame])
     roadSprites: SpriteFrame[] = []
@@ -81,13 +85,24 @@ export class startGame extends Component {
         if (level < this.maxLevels) {
             this.gameNode.active = true
             this.levelsNode.active = false
-            createRoads(this.audioController, this.node, this.levelTitle, this.gameRoads, level, this.roadSprites, isNext)
+            createRoads(
+                this.audioController, 
+                this.node, 
+                this.levelTitle, 
+                this.gameRoads, 
+                level, 
+                this.roadSprites, 
+                isNext
+            )
         } else {
             this.showLevelsMenu()
         }
     }
 
     start() {
+        const playButtonLabel = this.node.getComponent(Label)
+        playButtonLabel.string = t('play')
+        this.levelsMenuLabel.string = t('levelSelect')
         this.levelsNode.active = false
         this.gameNode.active = false
         this.createLevelButtons()
