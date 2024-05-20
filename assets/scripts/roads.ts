@@ -1,5 +1,5 @@
 import { Node, Vec3, tween, Button, Sprite, SpriteFrame, Label } from 'cc'
-import levels from './levelsData'
+import { levels } from './levelsData'
 import { AudioController } from './audioController'
 import { t } from './translations'
 
@@ -102,25 +102,40 @@ function setLevelTitle(levelTitle: Node, level: number) {
     title.string = `${t('level')} ${level + 1}`
 }
 
-function animateTitleLevel(levelTitle: Node, level: number) {
+function outLevelTitle(levelTitle: Node) {
     const pos = levelTitle.position
-    const center = new Vec3(0, pos.y, 0)
     const oldFinal = new Vec3(-600, pos.y, 0)
-    const newInitial = new Vec3(600, pos.y, 0)
     tween(levelTitle)
     .to(0.5, { position: oldFinal }, { easing: "quadInOut" })
     .delay(0.5)
+    .start()
+}
+
+function inLevelTitle(levelTitle: Node, level: number) {
+    const pos = levelTitle.position
+    const center = new Vec3(0, pos.y, 0)
+    const newInitial = new Vec3(600, pos.y, 0)
+    tween(levelTitle)
+    .delay(1)
     .set({ position: newInitial })
     .call(() => setLevelTitle(levelTitle, level))
     .to(0.5, { position: center }, { easing: "expoOut" })
     .start()
 }
 
-export function hideRoadsAnimation(audioController: AudioController, roadsParent: Node) {
+export function hideRoadsAnimation(
+    audioController: AudioController, 
+    roadsParent: Node, 
+    levelTitle: Node, 
+    level: number,
+    onlyOutAnimation?: boolean
+ ) {
     canRotate = false
     roadsParent.children.forEach((road: Node) => {
         roadAnimation(audioController, road, ROAD_SCALE, true)
     })
+    outLevelTitle(levelTitle)
+    if (!onlyOutAnimation) inLevelTitle(levelTitle, level)
 }
 
 function createRoadWithAnimation(
@@ -131,8 +146,8 @@ function createRoadWithAnimation(
     level: number, 
     roadSprites: SpriteFrame[]
 ) {
-    hideRoadsAnimation(audioController, roadsParent)
-    animateTitleLevel(levelTitle, level)
+    
+    hideRoadsAnimation(audioController, roadsParent, levelTitle, level)
     tween(roadsParent)
     .delay(ROAD_ANIMATION_DELAY)
     .call(() => {

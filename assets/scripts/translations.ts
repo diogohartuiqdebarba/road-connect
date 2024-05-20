@@ -3,16 +3,19 @@ const translations = Object.freeze({
         play: "Play",
         levelSelect: "Level Select",
         level: "Level",
+        allLevelsCleared: "All levels cleared!",
     },
     "pt": {
         play: "Jogar",
         levelSelect: "Selecao de Nivel",
         level: "Nivel",
+        allLevelsCleared: "Todos os niveis finalizados!",
     },
     "es": {
         play: "Jugar",
         levelSelect: "Seleccion de Nivel",
         level: "Nivel",
+        allLevelsCleared: "Todos los niveles superados!",
     },
 })
 

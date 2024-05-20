@@ -1,14 +1,12 @@
-import { _decorator, Component, Node, Prefab, CCInteger, Label, SpriteFrame, Vec3, tween, instantiate, Tween } from 'cc'
+import { _decorator, Component, Node, Prefab, Label, SpriteFrame, Vec3, tween, instantiate, Tween, UIOpacity } from 'cc'
 import { createRoads, hideRoadsAnimation } from './roads'
 import { AudioController } from './audioController'
 import { t } from './translations'
+import { levelsLength } from './levelsData'
 const { ccclass, property } = _decorator
 
 @ccclass('startGame')
 export class startGame extends Component {
-    @property(CCInteger)
-    maxLevels = 1
-
     @property(Node)
     levelsNode: Node = null
 
@@ -36,13 +34,16 @@ export class startGame extends Component {
     @property(AudioController)
     audioController: AudioController = null
 
+    @property(Node)
+    completedLevelsLabel: Node = null
+
     createLevelButtons() {
-        const initialPosX = -145
-        const initialPosY = 180
-        const offsetX = 72
+        const initialPosX = -136
+        const initialPosY = 168
+        const offsetX = 88
         const offsetY = 78
         const maxLevelsPerRow = 4
-        for (let i = 0; i < this.maxLevels; i++) {
+        for (let i = 0; i < levelsLength; i++) {
             const prefabInstance = instantiate(this.levelButtonPrefab)
             const row = Math.floor(i / maxLevelsPerRow)
             const column = i % maxLevelsPerRow
@@ -61,7 +62,6 @@ export class startGame extends Component {
     }
 
     showLevelsMenu() {
-        hideRoadsAnimation(this.audioController, this.gameRoads)
         this.audioController.playOneShot('defaultClick')
         tween(this.node)
         .delay(0.5)
@@ -81,8 +81,17 @@ export class startGame extends Component {
         .start()
     }
 
+    showEndGame(level: number) {
+        hideRoadsAnimation(this.audioController, this.gameRoads, this.levelTitle, level, true)
+        const uiOpacity = this.completedLevelsLabel.getComponent(UIOpacity)
+        tween(uiOpacity)
+        .delay(0.25)
+        .to(1, { opacity: 255 }, { easing: "linear" })
+        .start()
+    }
+
     playGame(level: number, isNext = false) {
-        if (level < this.maxLevels) {
+        if (level < levelsLength) {
             this.gameNode.active = true
             this.levelsNode.active = false
             createRoads(
@@ -95,7 +104,7 @@ export class startGame extends Component {
                 isNext
             )
         } else {
-            this.showLevelsMenu()
+            this.showEndGame(level)
         }
     }
 
@@ -103,6 +112,7 @@ export class startGame extends Component {
         const playButtonLabel = this.node.getComponent(Label)
         playButtonLabel.string = t('play')
         this.levelsMenuLabel.string = t('levelSelect')
+        this.completedLevelsLabel.getComponent(Label).string = t('allLevelsCleared')
         this.levelsNode.active = false
         this.gameNode.active = false
         this.createLevelButtons()

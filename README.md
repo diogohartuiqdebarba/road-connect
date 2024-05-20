@@ -8,8 +8,7 @@ Avoiding extra spaces and comments helps maintain a dynamic reading in the code,
 
 # Optional Enhancements
 
- Multi-resolution support to seamlessly switch between landscape and portrait
- orientations.
+ Multi-resolution support to seamlessly switch between landscape and portrait orientations.
 
  Localization support for "pt", "en" and "es".
 
