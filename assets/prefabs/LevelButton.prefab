@@ -130,8 +130,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 15.28125,
-      "height": 40.32
+      "width": 14.847991943359375,
+      "height": 50.4
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -169,14 +169,17 @@
     "_string": "1",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
-    "_actualFontSize": 24,
-    "_fontSize": 24,
+    "_actualFontSize": 32,
+    "_fontSize": 32,
     "_fontFamily": "Tahoma",
-    "_lineHeight": 32,
+    "_lineHeight": 40,
     "_overflow": 0,
     "_enableWrapText": true,
-    "_font": null,
-    "_isSystemFontUsed": true,
+    "_font": {
+      "__uuid__": "6e7716a4-c62d-41b3-bff6-eb5ed9ac836e",
+      "__expectedType__": "cc.TTFFont"
+    },
+    "_isSystemFontUsed": false,
     "_spacingX": 0,
     "_isItalic": false,
     "_isBold": true,
@@ -192,7 +195,7 @@
       "a": 255
     },
     "_outlineWidth": 2,
-    "_enableShadow": false,
+    "_enableShadow": true,
     "_shadowColor": {
       "__type__": "cc.Color",
       "r": 0,
@@ -202,10 +205,10 @@
     },
     "_shadowOffset": {
       "__type__": "cc.Vec2",
-      "x": 2,
-      "y": 2
+      "x": -2,
+      "y": -2
     },
-    "_shadowBlur": 2,
+    "_shadowBlur": 0,
     "_id": ""
   },
   {

@@ -4,24 +4,25 @@ const translations = Object.freeze({
         levelSelect: "Level Select",
         level: "Level",
     },
-    "pt-PT": {
+    "pt": {
         play: "Jogar",
-        levelSelect: "Seleção de Nível",
-        level: "Nível",
-    },
-    "pt-BR": {
-        play: "Jogar",
-        levelSelect: "Seleção de Nível",
-        level: "Nível",
+        levelSelect: "Selecao de Nivel",
+        level: "Nivel",
     },
     "es": {
         play: "Jugar",
-        levelSelect: "Selección de Nivel",
+        levelSelect: "Seleccion de Nivel",
         level: "Nivel",
     },
 })
 
-const allowedLangs = (lang: string) => Object.keys(translations).find(k => k === lang)
+const allowedLangs = (lang: string) => Object.keys(translations).find(key => {
+    if (lang.includes('-')) {
+        return lang.includes(key)
+    } else {
+        return lang === key
+    }
+})
 
 export const t = (key: string) => {
     // @ts-ignore

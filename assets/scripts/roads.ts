@@ -12,13 +12,14 @@ function getRandomNumber(min: number, max: number) {
     return Math.random() * (max - min) + min
 }
 
-function roadAnimation(node: Node, scale: number, invert = false) {
+function roadAnimation(audioController: AudioController, node: Node, scale: number, invert = false) {
     const initialScale = Vec3.ZERO
     const finalScale = new Vec3(scale, scale, 1)
     tween(node)
     .set({ scale: invert ? finalScale : initialScale})
     .delay(invert ? 0 : getRandomNumber(0.25, 0.75))
-    .to(0.25, { scale: invert ? initialScale : finalScale }, { easing: "quadInOut"})
+    .call(() => !invert && audioController.playOneShot('shapeAppear'))
+    .to(0.25, { scale: invert ? initialScale : finalScale }, { easing: "quadInOut" })
     .start()
 }
 
@@ -32,10 +33,10 @@ function clampAngle(angle: number) {
 function checkTargetAngles(menu: Node, level: number, roadsParent: Node) {
     const levelRoads = levels[level].roads
     const levelComplete = roadsParent.children.every(road => {
+        const index = road.name.split('-')[1]
         const angle = (Math.abs(clampAngle(road.angle))) % 360
-        const index = road.name.split('_')[2]
-        const targetAngle = levelRoads[index].targetAngle
-        return angle === targetAngle
+        const targetAngles = levelRoads[index].targetAngles
+        return targetAngles.includes(angle)
     })
     if (levelComplete) {
         const nextLevel = level + 1
@@ -52,7 +53,7 @@ function roadRotate(menu: Node, node: Node, level: number, roadsParent: Node) {
     if (canRotate) {
         const angle = clampAngle(node.angle - 90)
         tween(node)
-        .to(0.15, { angle }, { easing: "quadIn"})
+        .to(0.15, { angle }, { easing: "quadIn" })
         .delay(ROAD_ANIMATION_DELAY)
         .call(() => checkTargetAngles(menu, level, roadsParent))
         .start()
@@ -80,14 +81,14 @@ function createRoadNodes(
         const column = index % max
         const posX = (initialPosX + gridPosX) + (column * offset)
         const posY = (initialPosY + gridPosY) - (row * offset)
-        const node = new Node(`Road_${level}_${i}`)
+        const node = new Node(`Road_${level}-${i}`)
         const sprite = node.addComponent(Sprite)
         node.addComponent(Button)
         sprite.spriteFrame = roadSprites[road.spriteId]
         const roadPosition = new Vec3(posX, posY, 0)
         node.position.set(roadPosition)
         node.angle = -road.angle
-        roadAnimation(node, scale)
+        roadAnimation(audioController, node, scale)
         node.setParent(roadsParent)
         node.on("click", () => {
             audioController.playOneShot('rotateShape')
@@ -115,17 +116,10 @@ function animateTitleLevel(levelTitle: Node, level: number) {
     .start()
 }
 
-function playShapeAppearSFX(roadsParent: Node, audioController: AudioController) {
-    tween(roadsParent)
-    .delay(0.2)
-    .call(() => audioController.playOneShot('shapeAppear'))
-    .start()
-}
-
-export function hideRoadsAnimation(roadsParent: Node) {
+export function hideRoadsAnimation(audioController: AudioController, roadsParent: Node) {
     canRotate = false
     roadsParent.children.forEach((road: Node) => {
-        roadAnimation(road, ROAD_SCALE, true)
+        roadAnimation(audioController, road, ROAD_SCALE, true)
     })
 }
 
@@ -137,7 +131,7 @@ function createRoadWithAnimation(
     level: number, 
     roadSprites: SpriteFrame[]
 ) {
-    hideRoadsAnimation(roadsParent)
+    hideRoadsAnimation(audioController, roadsParent)
     animateTitleLevel(levelTitle, level)
     tween(roadsParent)
     .delay(ROAD_ANIMATION_DELAY)
@@ -146,7 +140,6 @@ function createRoadWithAnimation(
         createRoadNodes(audioController, menu, roadsParent, level, roadSprites)
         canRotate = true
     })
-    .call(() => playShapeAppearSFX(roadsParent, audioController))
     .start()
 }
 
@@ -161,7 +154,6 @@ function createRoadWithoutAnimation(
     setLevelTitle(levelTitle, level)
     roadsParent.removeAllChildren()
     createRoadNodes(audioController, menu, roadsParent, level, roadSprites)
-    playShapeAppearSFX(roadsParent, audioController)
     canRotate = true
 }
 

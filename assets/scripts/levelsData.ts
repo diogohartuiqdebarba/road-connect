@@ -2,7 +2,7 @@ type Road = {
     spriteId: number,
     pos: number,
     angle: number,
-    targetAngle: number,
+    targetAngles: number[],
 }
 
 type Level = {
@@ -16,25 +16,25 @@ const levels: Level[] = [
                 spriteId: 1,
                 pos: 5,
                 angle: 90,
-                targetAngle: 0
+                targetAngles: [0]
             },
             {
                 spriteId: 1,
                 pos: 6,
                 angle: 0,
-                targetAngle: 90
+                targetAngles: [90]
             },
             {
                 spriteId: 1,
                 pos: 9,
                 angle: 180,
-                targetAngle: 270
+                targetAngles: [270]
             },
             {
                 spriteId: 1,
                 pos: 10,
                 angle: 270,
-                targetAngle: 180
+                targetAngles: [180]
             },
         ]
     },
@@ -44,31 +44,31 @@ const levels: Level[] = [
                 spriteId: 1,
                 pos: 5,
                 angle: 0,
-                targetAngle: 0,
+                targetAngles: [0],
             },
             {
                 spriteId: 1,
                 pos: 6,
                 angle: 180,
-                targetAngle: 90,
+                targetAngles: [90],
             },
             {
                 spriteId: 1,
                 pos: 9,
                 angle: 180,
-                targetAngle: 270,
+                targetAngles: [270],
             },
             {
                 spriteId: 0,
                 pos: 10,
                 angle: 90,
-                targetAngle: 180,
+                targetAngles: [0, 180],
             },
             {
                 spriteId: 0,
                 pos: 14,
                 angle: 90,
-                targetAngle: 180,
+                targetAngles: [0, 180],
             },
         ]
     },

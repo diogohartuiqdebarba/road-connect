@@ -61,7 +61,7 @@ export class startGame extends Component {
     }
 
     showLevelsMenu() {
-        hideRoadsAnimation(this.gameRoads)
+        hideRoadsAnimation(this.audioController, this.gameRoads)
         this.audioController.playOneShot('defaultClick')
         tween(this.node)
         .delay(0.5)
@@ -76,7 +76,7 @@ export class startGame extends Component {
     playButtonAnimation() {
         const scale = new Vec3(1.1, 1.1, 1)
         tween(this.node)
-        .to(0.5, { scale }, { easing: "expoOut"})
+        .to(0.5, { scale }, { easing: "expoOut" })
         .call(() => this.showLevelsMenu())
         .start()
     }

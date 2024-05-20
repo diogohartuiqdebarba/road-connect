@@ -26,7 +26,7 @@ import { _decorator, Component, AudioSource, AudioClip } from 'cc'
                 this.audioSource.playOneShot(this.sfxShapeAppear, 1)
                 break
             case 'rotateShape':
-                this.audioSource.playOneShot(this.sfxRotateShape, 1)
+                this.audioSource.playOneShot(this.sfxRotateShape, 2)
                 break
             case 'levelComplete':
                 this.audioSource.playOneShot(this.sfxLevelComplete, 1)

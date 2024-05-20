@@ -2,10 +2,21 @@
 
 # Code convention
 
-I think if you need comment something in the code, with rare exceptions, is because you are making or thinking something wrong. So my code is clear and readable, the functions said what they do, and the variable what be are.
+Clear and readable code, with functions and variables named descriptively, eliminating the need for most comments.
 
-I avoid extra spaces and comments in my code, I like to read the code dynamically, this way I work faster and have everything in my mental memory more easily.
+Avoiding extra spaces and comments helps maintain a dynamic reading in the code, enabling faster work and easier retention of information in mental memory.
 
-# Original project bugs
+# Optional Enhancements
+
+ Multi-resolution support to seamlessly switch between landscape and portrait
+ orientations.
+
+ Localization support for "pt", "en" and "es".
+
+# Bugs
 
 The first bug founded was the level title, it starts in 0 instead 1. Not congruent with the level buttons in the menu.
+
+The font "22203___.ttf" not worked because the filename started with number, so I rename to "FONT22203___.ttf".
+
+It was necessary to remove the translations' accents because the font "FONT22203___.ttf" does not have them.
