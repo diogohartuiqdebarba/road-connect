@@ -35,7 +35,7 @@ export class startGame extends Component {
     audioController: AudioController = null
 
     @property(Node)
-    completedLevelsLabel: Node = null
+    endGameLabel: Node = null
 
     createLevelButtons() {
         const initialPosX = -136
@@ -83,14 +83,26 @@ export class startGame extends Component {
 
     showEndGame(level: number) {
         hideRoadsAnimation(this.audioController, this.gameRoads, this.levelTitle, level, true)
-        const uiOpacity = this.completedLevelsLabel.getComponent(UIOpacity)
+        const uiOpacity = this.endGameLabel.getComponent(UIOpacity)
         tween(uiOpacity)
         .delay(0.25)
         .to(1, { opacity: 255 }, { easing: "linear" })
         .start()
     }
 
+    resetEndGameLabelOpacity() {
+        const endGameUiOpacity = this.endGameLabel.getComponent(UIOpacity)
+        endGameUiOpacity.opacity = 0
+    }
+
+    resetLevelTitlePosition() {
+        const pos = this.levelTitle.position
+        this.levelTitle.setPosition(new Vec3(0, pos.y, 0))
+    }
+
     playGame(level: number, isNext = false) {
+        this.resetEndGameLabelOpacity()
+        this.resetLevelTitlePosition()
         if (level < levelsLength) {
             this.gameNode.active = true
             this.levelsNode.active = false
@@ -112,7 +124,7 @@ export class startGame extends Component {
         const playButtonLabel = this.node.getComponent(Label)
         playButtonLabel.string = t('play')
         this.levelsMenuLabel.string = t('levelSelect')
-        this.completedLevelsLabel.getComponent(Label).string = t('allLevelsCleared')
+        this.endGameLabel.getComponent(Label).string = t('allLevelsCleared')
         this.levelsNode.active = false
         this.gameNode.active = false
         this.createLevelButtons()

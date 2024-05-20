@@ -792,7 +792,7 @@
     "audioController": {
       "__id__": 46
     },
-    "completedLevelsLabel": {
+    "endGameLabel": {
       "__id__": 35
     },
     "_id": "e6kIwWOXZHTItDB9Ym2CDv"
@@ -1493,7 +1493,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "CompletedLevelsLabel",
+    "_name": "EndGameLabel",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
