@@ -1,18 +1,22 @@
 # Road Connect
 
-# Code convention
+Diogo Hartuiq Debarba
+diogohartuiqdebarba@gmail.com
+[https://www.linkedin.com/in/diogohartuiqdebarba/](https://www.linkedin.com/in/diogohartuiqdebarba/)
+
+## Code convention
 
 Clear and readable code, with functions and variables named descriptively, eliminating the need for most comments.
 
 Avoiding extra spaces and comments helps maintain a dynamic reading in the code, enabling faster work and easier retention of information in mental memory.
 
-# Optional Enhancements
+## Optional Enhancements
 
- Multi-resolution support to seamlessly switch between landscape and portrait orientations.
+Multi-resolution support to seamlessly switch between landscape and portrait orientations.
 
- Localization support for "pt", "en" and "es".
+Localization support for "pt", "en" and "es".
 
-# Bugs
+## Fixed bugs
 
 The first bug founded was the level title, it starts in 0 instead 1. Not congruent with the level buttons in the menu.
 

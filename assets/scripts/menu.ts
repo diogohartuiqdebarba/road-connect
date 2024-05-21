@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Prefab, Label, SpriteFrame, Vec3, tween, instantiate, Tween, UIOpacity } from 'cc'
+import { _decorator, Component, Node, Prefab, Label, SpriteFrame, Vec3, tween, instantiate, Tween, UIOpacity, view, macro } from 'cc'
 import { createRoads, hideRoadsAnimation } from './roads'
 import { AudioController } from './audioController'
 import { t } from './translations'
@@ -91,13 +91,15 @@ export class startGame extends Component {
     }
 
     resetEndGameLabelOpacity() {
-        const endGameUiOpacity = this.endGameLabel.getComponent(UIOpacity)
-        endGameUiOpacity.opacity = 0
+        const uiOpacity = this.endGameLabel.getComponent(UIOpacity)
+        uiOpacity.opacity = 0
     }
 
     resetLevelTitlePosition() {
         const pos = this.levelTitle.position
         this.levelTitle.setPosition(new Vec3(0, pos.y, 0))
+        const uiOpacity = this.levelTitle.getComponent(UIOpacity)
+        uiOpacity.opacity = 255
     }
 
     playGame(level: number, isNext = false) {
@@ -135,7 +137,23 @@ export class startGame extends Component {
             this.audioController.playOneShot('levelComplete')
             this.playGame(level, true)
         })
-    }    
+    }
+
+    onResize() {
+        const gameDiv = document.getElementById('GameDiv')
+        const isLandscape = window.innerWidth > window.innerHeight
+        const width = isLandscape ? 640 : 360
+        const height = isLandscape ? 360 : 640
+        gameDiv.style.width = `${width}px`
+        gameDiv.style.height = `${height}px`
+        const orientation = isLandscape ? macro.ORIENTATION_LANDSCAPE :  macro.ORIENTATION_PORTRAIT
+        view.setOrientation(orientation)
+    }
+
+    onLoad() {
+        window.addEventListener('resize', this.onResize.bind(this))
+        this.onResize()
+    }
 }
 
 

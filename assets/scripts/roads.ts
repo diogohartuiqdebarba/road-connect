@@ -1,4 +1,4 @@
-import { Node, Vec3, tween, Button, Sprite, SpriteFrame, Label } from 'cc'
+import { Node, Vec3, tween, Button, Sprite, SpriteFrame, Label, UIOpacity } from 'cc'
 import { levels } from './levelsData'
 import { AudioController } from './audioController'
 import { t } from './translations'
@@ -103,15 +103,25 @@ function setLevelTitle(levelTitle: Node, level: number) {
 }
 
 function outLevelTitle(levelTitle: Node) {
+    const uiOpacity = levelTitle.getComponent(UIOpacity)
+    tween(uiOpacity)
+    .to(0.5, { opacity: 0 }, { easing: "quadInOut" })
+    .start()
     const pos = levelTitle.position
     const oldFinal = new Vec3(-600, pos.y, 0)
     tween(levelTitle)
     .to(0.5, { position: oldFinal }, { easing: "quadInOut" })
     .delay(0.5)
     .start()
+    
 }
 
 function inLevelTitle(levelTitle: Node, level: number) {
+    const uiOpacity = levelTitle.getComponent(UIOpacity)
+    tween(uiOpacity)
+    .delay(1)
+    .to(0.25, { opacity: 255 }, { easing: "quadInOut" })
+    .start()
     const pos = levelTitle.position
     const center = new Vec3(0, pos.y, 0)
     const newInitial = new Vec3(600, pos.y, 0)
